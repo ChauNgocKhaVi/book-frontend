@@ -25,7 +25,7 @@ export default {
             try {
                 await BookService.create(data);
                 alert("Sách được thêm thành công.");
-                this.$router.push({ name: "booklist" });
+                this.$router.push({ name: "book", query: { reload: true } });
             } catch (error) {
                 console.log(error);
             }
