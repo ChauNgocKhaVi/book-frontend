@@ -1,20 +1,33 @@
 <template>
     <div class="page container">
         <h2 class="text-center">Quản lý mượn sách</h2>        
+
         <div class="row mt-3">
             <div class="col-md-12">
                 <InputSearch v-model="searchText" />
             </div>
         </div>
         
+        <!-- Tiêu đề danh sách và nút "Thêm mới" cùng hàng -->
+        <div class="row mt-3 align-items-center justify-content-between">
+            <div class="col-auto">
+                <h4>Danh sách nhà xuất bản <i class="fas fa-building"></i></h4>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-sm btn-success" @click="goToAddPublisher">
+                    <i class="fas fa-plus"></i> Thêm mới
+                </button>
+            </div>
+        </div>
+
         <div class="row mt-3">
             <div class="col-md-12">
-                <h4>Danh sách nhà xuất bản <i class="fas fa-building"></i></h4>
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Tên nhà xuất bản</th>
-                            <th>Địa chỉ</th>                
+                            <th>Địa chỉ</th> 
+                            <th class="text-center">Hành động</th>               
                         </tr>
                     </thead>
                     <tbody>
@@ -22,12 +35,10 @@
                             <td>{{ publisher.TenNXB }}</td>
                             <td>{{ publisher.DiaChi }}</td>                            
                             <td class="text-center">
-                                <!-- Nút Sửa -->
-                                <button class="btn btn-sm btn-warning mr-4" @click="goToEditStaff(publisher._id)">
+                                <button class="btn btn-sm btn-warning mr-2" @click="goToEditPublisher(publisher._id)">
                                     <i class="fas fa-edit"></i> Sửa
                                 </button>
-                                <!-- Nút Xóa -->
-                                <button class="btn btn-sm btn-danger ml-2" @click="removePublisher(publisher._id)">
+                                <button class="btn btn-sm btn-danger" @click="removePublisher(publisher._id)">
                                     <i class="fas fa-trash"></i> Xóa
                                 </button>
                             </td>
@@ -37,28 +48,15 @@
                 <p v-if="filteredPublishersCount === 0">Không có nhà xuất bản nào.</p>
             </div>
         </div>
-        
-        <div class="row mt-3">
-            <div class="col-md-12 text-center">
-                <button class="btn btn-sm btn-success mr-5" @click="goToAddPublisher">
-                    <i class="fas fa-plus"></i> Thêm mới
-                </button>
-                <button class="btn btn-sm btn-danger" @click="removeAllPublishers">
-                    <i class="fas fa-trash"></i> Xóa tất cả
-                </button>
-            </div>
-        </div>
-        
     </div>
 </template>
 
 <script>
-import PublisherCard from "@/components/PublisherCard.vue";
 import InputSearch from "@/components/InputSearch.vue";
 import PublisherService from "@/services/publisher.service";
+
 export default {
     components: {
-        PublisherCard,
         InputSearch,
     },
     data() {
@@ -86,7 +84,6 @@ export default {
                 this.publisherStrings[index].includes(this.searchText)
             );
         },
-        
         filteredPublishersCount() {
             return this.filteredPublishers.length;
         },
@@ -106,7 +103,7 @@ export default {
         },
 
         async removeAllPublishers() {
-            if (confirm("Bạn muốn xóa tất cả nhà xuẩ bản không?")) {
+            if (confirm("Bạn muốn xóa tất cả nhà xuất bản không?")) {
                 try {
                     await PublisherService.deleteAll();
                     this.refreshList();
@@ -119,15 +116,15 @@ export default {
         async removePublisher(publisherId) {
             if (confirm("Bạn muốn xóa nhà xuất bản này?")) {
                 try {
-                    await PublisherService.delete(publisherId);  // Gọi API để xóa nhà xuất bản
-                    this.refreshList();  // Làm mới danh sách
+                    await PublisherService.delete(publisherId);
+                    this.refreshList();
                 } catch (error) {
                     console.error("Lỗi khi xóa nhà xuất bản:", error);
                 }
             }
         },
 
-        goToEditStaff(id) {
+        goToEditPublisher(id) {
             this.$router.push({ name: "publisher.edit", params: { id } });
         },
         goToAddPublisher() {
