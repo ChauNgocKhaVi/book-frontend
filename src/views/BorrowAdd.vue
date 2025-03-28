@@ -25,7 +25,7 @@ export default {
             try {
                 await BorrowService.create(data);
                 alert("Người mượn được thêm thành công.");
-                this.$router.push({ name: "borowlist" });
+                this.$router.push({ name: "borrow", query: { reload: true } });
             } catch (error) {
                 console.log(error);
             }
