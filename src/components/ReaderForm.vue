@@ -35,9 +35,7 @@
         </div>
         <div class="form-group">
             <button class="btn btn-primary">Lưu</button>
-            <button v-if="readerLocal._id" type="button" class="ml-2 btn btn-danger" @click="deleteReader">
-                Xóa
-            </button>
+            
             <button type="button" class="ml-2 btn btn-danger" @click="Cancel">
                 Thoát
             </button>
