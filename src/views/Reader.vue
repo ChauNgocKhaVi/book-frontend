@@ -1,43 +1,50 @@
 <template>
     <div class="page container">
         <h2 class="text-center">Quản lý Độc Giả</h2>
-        
+
         <div class="row mt-3">
             <div class="col-md-12">
                 <InputSearch v-model="searchText" />
             </div>
         </div>
-        
+
+        <!-- Tiêu đề danh sách và nút "Thêm mới" cùng hàng -->
+        <div class="row mt-3 align-items-center justify-content-between">
+            <div class="col-auto">
+                <h4>Danh sách Độc Giả <i class="fas fa-users"></i></h4>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-sm btn-success" @click="goToAddReader">
+                    <i class="fas fa-plus"></i> Thêm mới
+                </button>
+            </div>
+        </div>
+
         <div class="row mt-3">
             <div class="col-md-12">
-                <h4>Danh sách Độc Giả <i class="fas fa-users"></i></h4>
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                         
                             <th>Họ Tên</th>
                             <th>Ngày Sinh</th>
                             <th>Phái</th>
                             <th>Địa Chỉ</th>
                             <th>Điện Thoại</th>
-                            <th>Hành Động</th>
+                            <th class="text-center">Hành Động</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(reader, index) in filteredReaders" :key="index" @click="activeIndex = index">
                             <td>{{ reader.HoLot }} {{ reader.Ten }}</td>
-                            
                             <td>{{ reader.NgaySinh }}</td>
                             <td>{{ reader.Phai }}</td>
                             <td>{{ reader.DiaChi }}</td>
                             <td>{{ reader.DienThoai }}</td>
                             <td class="text-center">
-                                <!-- Nút Sửa -->
-                                <button class="btn btn-sm btn-warning mr-3" @click="goToEditReader(reader._id)">
+                                <button class="btn btn-sm btn-warning mr-2" @click="goToEditReader(reader._id)">
                                     <i class="fas fa-edit"></i> Sửa
                                 </button>
-                                 <!-- Nút Xóa -->
-                                <button class="btn btn-sm btn-danger ml-2" @click="removeReader(reader._id)">
+                                <button class="btn btn-sm btn-danger" @click="removeReader(reader._id)">
                                     <i class="fas fa-trash"></i> Xóa
                                 </button>
                             </td>
@@ -47,30 +54,17 @@
                 <p v-if="filteredReadersCount === 0">Không có độc giả nào.</p>
             </div>
         </div>
-        
-        <div class="row mt-3">
-            <div class="col-md-12 text-center">
-                <button class="btn btn-sm btn-success mr-5" @click="goToAddReader">
-                    <i class="fas fa-plus"></i> Thêm mới
-                </button>
-                <button class="btn btn-sm btn-danger" @click="removeAllReaders">
-                    <i class="fas fa-trash"></i> Xóa tất cả
-                </button>
-            </div>
-        </div>
-        
+
         
     </div>
 </template>
 
 <script>
-import ReaderCard from "@/components/ReaderCard.vue";
 import InputSearch from "@/components/InputSearch.vue";
 import ReaderService from "@/services/reader.service";
 
 export default {
     components: {
-        ReaderCard,
         InputSearch,
     },
     data() {
@@ -93,13 +87,11 @@ export default {
             });
         },
         filteredReaders() {
-            console.log("Danh sách độc giả sau khi lọc:", this.readers);
             if (!this.searchText) return this.readers;
             return this.readers.filter((_reader, index) =>
                 this.readerStrings[index].includes(this.searchText)
             );
         },
-        
         filteredReadersCount() {
             return this.filteredReaders.length;
         },
@@ -140,7 +132,6 @@ export default {
             }
         },
 
-
         goToEditReader(id) {
             this.$router.push({ name: "reader.edit", params: { id } });
         },
@@ -148,7 +139,7 @@ export default {
             this.$router.push({ name: "reader.add" });
         },
     },
-     mounted() {
+    mounted() {
         this.refreshList();
     },
 };
